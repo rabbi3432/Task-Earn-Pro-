@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task Earn Pro</title>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: sans-serif; background: #0f172a; color: #fff; padding: 16px; }
+        .card { background: #1e293b; padding: 16px; border-radius: 12px; margin-bottom: 15px; border: 1px solid #334155; }
+        .balance { font-size: 24px; color: #10b981; font-weight: bold; margin-top: 5px; }
+        .btn { background: #10b981; color: white; border: none; padding: 12px; border-radius: 8px; width: 100%; font-size: 15px; font-weight: bold; cursor: pointer; margin-top: 10px; }
+        iframe { width: 100%; height: 450px; border: none; border-radius: 8px; margin-top: 10px; }
+    </style>
+</head>
+<body>
+
+    <div class="card">
+        <h3>আপনার ব্যালেন্স</h3>
+        <div class="balance">৳<span id="user-balance">0.00</span></div>
+        <p style="font-size: 13px; color: #94a3b8; margin-top: 5px;">মোবাইল নম্বর: <b id="user-phone">01700000000</b></p>
+    </div>
+
+    <div class="card">
+        <h3><i class="fa-solid fa-play" style="color:#10b981;"></i> এড দেখে ইনকাম</h3>
+        <p style="font-size: 13px; color: #94a3b8; margin-top: 4px;">প্রতিটি এড দেখার জন্য পাবেন ৳১.০০</p>
+        <button class="btn" onclick="watchAd()">এড দেখুন (Start.io)</button>
+    </div>
+
+    <div class="card">
+        <h3><i class="fa-solid fa-list-check" style="color:#10b981;"></i> CPAlead অফারওয়াল</h3>
+        <button class="btn" style="background:#3b82f6;" onclick="showOffers()">অফারগুলো দেখুন</button>
+        <div id="offer-box" style="display:none;">
+            <iframe id="cpalead-frame" src="https://google.com"></iframe>
+        </div>
+    </div>
+
+    <script>
+        // ডেমো ফায়ারবেস কনফিগ
+        const firebaseConfig = {
+            databaseURL: "https://testing-app-demo-default-rtdb.firebaseio.com"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        let myPhone = "01700000000";
+
+        // ব্যালেন্স ডাটা রিড করা
+        db.ref('users/' + myPhone).on('value', (snapshot) => {
+            const val = snapshot.val();
+            if(val && val.balance) {
+                document.getElementById('user-balance').innerText = val.balance.toFixed(2);
+            }
+        });
+
+        function watchAd() {
+            alert("এড দেখা সম্পন্ন হয়েছে! ৳১.০০ যোগ করা হলো।");
+            db.ref('users/' + myPhone + '/balance').transaction(curr => (curr || 0) + 1.00);
+        }
+
+        function showOffers() {
+            document.getElementById('offer-box').style.display = 'block';
+        }
+    </script>
+</body>
+</html>
