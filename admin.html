@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+    <meta charset="UTF-8">
+    <title>Admin Dashboard</title>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+    <style>
+        body { font-family: sans-serif; background: #1e293b; color: white; padding: 20px; }
+        .box { background: #0f172a; padding: 15px; border-radius: 8px; margin-bottom: 15px; }
+        button { background: #10b981; color: white; border: none; padding: 10px 15px; border-radius: 5px; cursor: pointer; font-weight: bold; }
+    </style>
+</head>
+<body>
+    <h2>এডমিন কন্ট্রোল প্যানেল</h2>
+    <br>
+    <div class="box">
+        <h3>ইউজার: 01700000000</h3>
+        <p>ব্যালেন্স রিচার্জ করুন:</p>
+        <br>
+        <button onclick="addMoney(10)">+ ৳১০ দিন</button>
+        <button onclick="addMoney(50)" style="background:#3b82f6;">+ ৳৫০ দিন</button>
+    </div>
+
+    <script>
+        const firebaseConfig = {
+            databaseURL: "https://testing-app-demo-default-rtdb.firebaseio.com"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.database();
+
+        function addMoney(amount) {
+            db.ref('users/01700000000/balance').transaction(curr => (curr || 0) + amount);
+            alert("৳" + amount + " অ্যাড করা হয়েছে!");
+        }
+    </script>
+</body>
+</html>
